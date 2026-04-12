@@ -1,9 +1,10 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-projet-card',
-  imports: [CommonModule],
+   standalone: true,
+  imports: [NgClass],
   templateUrl: './projet-card.html',
   styleUrl: './projet-card.scss',
 })

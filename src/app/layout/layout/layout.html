@@ -1,0 +1,35 @@
+<div class="ide-layout">
+
+  <!-- HEADER IDE -->
+  <header class="titlebar">
+    <div class="dots">
+      <span class="dot red"></span>
+      <span class="dot yellow"></span>
+      <span class="dot green"></span>
+    </div>
+
+    <div class="title">
+      HamidAchahboune.java — Portfolio
+    </div>
+  </header>
+
+  <!-- TABS NAVIGATION -->
+  <nav class="tabs">
+    <a routerLink="" routerLinkActive="active" class="tab">☕ Home</a>
+    <a routerLink="projects" routerLinkActive="active" class="tab">📦 Projects</a>
+    <a routerLink="contact" routerLinkActive="active" class="tab">📬 Contact</a>
+  </nav>
+
+  <!-- CONTENT -->
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- STATUS BAR -->
+  <footer class="statusbar">
+    <span>☕ Java 21</span>
+    <span>🟢 Spring Boot</span>
+    <span class="right">📍 Lyon</span>
+  </footer>
+
+</div>

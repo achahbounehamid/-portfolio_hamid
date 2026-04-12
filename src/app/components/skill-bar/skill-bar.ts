@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-skill-bar',
+  standalone: true,
   imports: [],
   templateUrl: './skill-bar.html',
   styleUrl: './skill-bar.scss',

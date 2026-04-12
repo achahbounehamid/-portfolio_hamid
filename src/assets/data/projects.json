@@ -1,0 +1,12 @@
+[
+  {
+    "title": "Diabetes Prediction System",
+    "description": "Microservices Spring Boot + Docker + Gateway",
+    "tags": ["Java 17", "Spring Boot", "MongoDB", "Docker"]
+  },
+  {
+    "title": "Emergency REST API",
+    "description": "REST API with Spring Data JPA",
+    "tags": ["Spring Boot", "JPA", "MySQL"]
+  }
+]
