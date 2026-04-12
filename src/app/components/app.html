@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hamid Achahboune · Java Backend Developer</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&family=Unbounded:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:         #0d1117;
+      --bg2:        #161b22;
+      --bg3:        #1c2128;
+      --border:     #30363d;
+      --border2:    #3d444d;
+      --text:       #e6edf3;
+      --muted:      #7d8590;
+      --dim:        #3d444d;
+
+      /* Java syntax colors — IntelliJ Darcula inspired */
+      --java-keyword:    #cc7832;   /* orange  — public, class, new */
+      --java-annotation: #bbb529;   /* yellow  — @Component         */
+      --java-string:     #6a8759;   /* green   — "valeurs"          */
+      --java-type:       #ffc66d;   /* amber   — types, classes      */
+      --java-comment:    #629755;   /* vert clair — commentaires     */
+      --java-method:     #ffc66d;   /* functions                     */
+      --java-number:     #6897bb;   /* blue    — chiffres            */
+      --java-tag:        #e8bf6a;   /* interface tag                 */
+      --accent:          #4d9cf5;   /* bleu IDE — curseur, selection */
+      --accent2:         #cc7832;   /* orange keyword                */
+      --green:           #6a8759;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ─── SCANLINES subtle overlay ─── */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.04) 2px,
+        rgba(0,0,0,0.04) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ─── IDE WINDOW CHROME ─── */
+    .ide-window {
+      max-width: 1100px;
+      margin: 2rem auto;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
+    }
+
+    /* Title bar */
+    .titlebar {
+      background: #21262d;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .dots { display: flex; gap: 6px; }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #febc2e; }
+    .dot-g { background: #28c840; }
+    .titlebar-name {
+      flex: 1;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+    }
+    .titlebar-name span { color: var(--text); }
+
+    /* Tabs */
+    .tabs {
+      background: var(--bg2);
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+    }
+    .tab {
+      padding: 8px 20px;
+      font-size: 12px;
+      color: var(--muted);
+      border-right: 1px solid var(--border);
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .tab:hover { background: var(--bg3); color: var(--text); }
+    .tab.active { background: var(--bg); color: var(--text); border-bottom: 2px solid var(--accent); }
+    .tab-icon { font-size: 10px; }
+
+    /* IDE body: gutter + code */
+    .ide-body { display: grid; grid-template-columns: 48px 1fr; min-height: 100vh; }
+
+    /* File tree sidebar */
+    .sidebar {
+      background: var(--bg2);
+      border-right: 1px solid var(--border);
+      padding: 1rem 0;
+      font-size: 11px;
+    }
+    .sidebar-section { padding: 0 8px; margin-bottom: 1rem; }
+    .sidebar-title { color: var(--muted); font-size: 10px; letter-spacing: 1px; padding: 4px 8px; text-transform: uppercase; }
+    .sidebar-item {
+      display: flex; align-items: center; gap: 6px;
+      padding: 3px 8px; color: var(--muted);
+      cursor: pointer; border-radius: 3px;
+      font-size: 11px; transition: background 0.15s, color 0.15s;
+    }
+    .sidebar-item:hover { background: var(--bg3); color: var(--text); }
+    .sidebar-item.active { background: rgba(77,156,245,0.15); color: var(--accent); }
+    .sidebar-item .ico { font-style: normal; width: 14px; text-align: center; }
+
+    /* Line numbers gutter */
+    .gutter {
+      background: var(--bg);
+      border-right: 1px solid var(--border);
+      padding: 2rem 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      user-select: none;
+    }
+    .ln {
+      font-size: 12px;
+      color: var(--dim);
+      padding: 0 8px;
+      line-height: 1.75;
+      min-width: 48px;
+      text-align: right;
+    }
+    .ln.hl { color: var(--muted); background: rgba(77,156,245,0.06); }
+
+    /* Code editor main */
+    .editor { background: var(--bg); padding: 2rem 2rem 4rem; overflow-x: auto; }
+
+    /* ─── JAVA SYNTAX ─── */
+    .kw   { color: var(--java-keyword); font-weight: 500; }      /* keywords */
+    .ann  { color: var(--java-annotation); }                      /* @Annotation */
+    .str  { color: var(--java-string); }                          /* "strings" */
+    .typ  { color: var(--java-type); }                            /* Types */
+    .cmt  { color: var(--java-comment); font-style: italic; }    /* // comments */
+    .num  { color: var(--java-number); }                          /* numbers */
+    .mtd  { color: var(--java-method); }                          /* methods */
+    .pkg  { color: var(--muted); }                                /* package path */
+    .op   { color: var(--muted); }                                /* operators */
+    .var  { color: var(--text); }                                 /* variables */
+    .iface{ color: var(--java-tag); }                             /* interface */
+
+    /* Code line */
+    .cl { display: block; font-size: 13.5px; line-height: 1.75; white-space: pre; font-family: 'JetBrains Mono', monospace; }
+    .cl:hover { background: rgba(255,255,255,0.03); }
+    .cl.hl { background: rgba(77,156,245,0.06); }
+    .indent1 { padding-left: 1.5em; }
+    .indent2 { padding-left: 3em; }
+    .indent3 { padding-left: 4.5em; }
+    .blank { height: 1.75em; display: block; }
+
+    /* Blinking cursor */
+    .cursor::after {
+      content: '|';
+      color: var(--accent);
+      animation: blink 1s step-end infinite;
+      font-weight: 300;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ─── SKILL BARS ─── */
+    .skill-row { display: flex; align-items: center; gap: 12px; margin: 6px 0; }
+    .skill-name { color: var(--java-type); min-width: 160px; font-size: 12px; }
+    .skill-bar { flex: 1; height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden; max-width: 220px; }
+    .skill-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--java-keyword), var(--java-type)); transition: width 1s ease; }
+    .skill-pct { color: var(--muted); font-size: 11px; min-width: 36px; }
+
+    /* ─── CARDS inside code blocks ─── */
+    .inline-card {
+      display: inline-block;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 16px;
+      margin: 4px 0;
+      font-size: 12px;
+      vertical-align: top;
+    }
+    .inline-card .label { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .inline-card .val { color: var(--text); }
+
+    /* ─── PROJECT BLOCKS ─── */
+    .project-block {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--java-keyword);
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      margin: 8px 0;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .project-block:hover { background: var(--bg3); border-left-color: var(--java-type); }
+    .project-block .proj-name { color: var(--java-type); font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+    .project-block .proj-desc { color: var(--muted); font-size: 12px; line-height: 1.6; margin-bottom: 8px; }
+    .proj-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+    .ptag { font-size: 10px; padding: 2px 8px; border-radius: 3px; background: rgba(204,120,50,0.12); color: var(--java-keyword); border: 1px solid rgba(204,120,50,0.2); }
+    .ptag.blue { background: rgba(77,156,245,0.1); color: #4d9cf5; border-color: rgba(77,156,245,0.2); }
+    .ptag.green { background: rgba(106,135,89,0.15); color: var(--java-string); border-color: rgba(106,135,89,0.3); }
+    .ptag.amber { background: rgba(255,198,109,0.1); color: var(--java-type); border-color: rgba(255,198,109,0.2); }
+    .proj-link { float: right; color: var(--accent); font-size: 11px; text-decoration: none; margin-top: -28px; }
+    .proj-link:hover { color: var(--java-type); }
+
+    /* ─── CONTACT GRID ─── */
+    .contact-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; max-width: 480px; }
+    .citem { background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px; text-decoration: none; transition: border-color 0.2s; }
+    .citem:hover { border-color: var(--java-keyword); }
+    .citem .clabel { font-size: 10px; color: var(--muted); margin-bottom: 3px; }
+    .citem .cval { font-size: 12px; color: var(--text); }
+
+    /* ─── CV MODAL ─── */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10000; align-items: center; justify-content: center; padding: 1.5rem; backdrop-filter: blur(8px); }
+    .modal-overlay.open { display: flex; }
+    .modal-box { background: var(--bg2); border: 1px solid var(--border2); border-radius: 10px; width: 100%; max-width: 800px; max-height: 92vh; display: flex; flex-direction: column; overflow: hidden; animation: pop 0.2s ease; }
+    @keyframes pop { from { opacity:0; transform: scale(0.95); } to { opacity:1; transform:none; } }
+    .modal-titlebar { background: #21262d; padding: 10px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); }
+    .modal-name { flex: 1; font-size: 12px; color: var(--muted); text-align: center; }
+    .modal-name span { color: var(--text); }
+    .modal-actions { display: flex; gap: 8px; }
+    .mdl-btn { background: var(--java-keyword); color: white; border: none; padding: 6px 14px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 11px; cursor: pointer; text-decoration: none; display: inline-block; }
+    .mdl-btn:hover { opacity: 0.85; }
+    .mdl-close { background: transparent; border: 1px solid var(--border2); color: var(--muted); width: 28px; height: 28px; border-radius: 4px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+    .mdl-close:hover { border-color: var(--java-keyword); color: var(--java-keyword); }
+    .modal-body { flex: 1; }
+    .modal-body iframe { width: 100%; height: 100%; min-height: 68vh; border: none; display: block; }
+
+    /* ─── AVATAR PHOTO ─── */
+    .avatar-wrap {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      border: 2px solid var(--java-keyword);
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg3);
+      flex-shrink: 0;
+      box-shadow: 0 0 0 4px rgba(204,120,50,0.15);
+    }
+    .avatar-wrap img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .avatar-fb { font-size: 24px; font-weight: 700; color: var(--java-keyword); }
+
+    /* Status bar at bottom */
+    .statusbar {
+      background: var(--java-keyword);
+      padding: 4px 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.85);
+    }
+    .sb-item { display: flex; align-items: center; gap: 4px; }
+    .sb-sep { opacity: 0.4; }
+    .sb-right { margin-left: auto; display: flex; gap: 16px; }
+
+    /* SCROLL ANIMATION */
+    .reveal { opacity: 0; transform: translateY(12px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    @media (max-width: 700px) {
+      .ide-window { margin: 0; border-radius: 0; }
+      .sidebar { display: none; }
+      .ide-body { grid-template-columns: 36px 1fr; }
+      .cl { font-size: 11.5px; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .proj-link { float: none; display: block; margin-top: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════
+     IDE WINDOW
+════════════════════════════════════════════════ -->
+<div class="ide-window">
+
+  <!-- Title Bar -->
+  <div class="titlebar">
+    <div class="dots">
+      <div class="dot dot-r"></div>
+      <div class="dot dot-y"></div>
+      <div class="dot dot-g"></div>
+    </div>
+    <div class="titlebar-name">
+      <span>HamidAchahboune.java</span> — IntelliJ IDEA
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active"><span class="tab-icon">☕</span> HamidAchahboune.java</div>
+    <div class="tab" onclick="document.getElementById('modal-cv').classList.add('open')"><span class="tab-icon">📄</span> CV.pdf</div>
+    <div class="tab"><span class="tab-icon">🔧</span> pom.xml</div>
+    <div class="tab"><span class="tab-icon">🐳</span> Dockerfile</div>
+  </div>
+
+  <!-- IDE Body -->
+  <div class="ide-body">
+
+    <!-- Gutter (line numbers) — generated by JS below -->
+    <div class="gutter" id="gutter"></div>
+
+    <!-- Code Editor -->
+    <div class="editor" id="editor">
+
+      <!-- ── PACKAGE + IMPORTS ── -->
+      <span class="cl"><span class="kw">package</span> <span class="pkg">fr.lyon.backend.developer</span><span class="op">;</span></span>
+      <span class="blank"></span>
+      <span class="cl"><span class="kw">import</span> <span class="pkg">org.springframework.boot.SpringApplication</span><span class="op">;</span></span>
+      <span class="cl"><span class="kw">import</span> <span class="pkg">org.springframework.boot.autoconfigure.SpringBootApplication</span><span class="op">;</span></span>
+      <span class="cl"><span class="kw">import</span> <span class="pkg">org.springframework.web.bind.annotation.*</span><span class="op">;</span></span>
+      <span class="cl"><span class="kw">import</span> <span class="pkg">java.util.List</span><span class="op">;</span></span>
+      <span class="blank"></span>
+
+      <!-- ── CLASS HEADER ── -->
+      <span class="cl"><span class="cmt">/**</span></span>
+      <span class="cl"><span class="cmt"> * @author   Hamid Achahboune</span></span>
+      <span class="cl"><span class="cmt"> * @title    Développeur Java Backend · CDI</span></span>
+      <span class="cl"><span class="cmt"> * @location Lyon, France</span></span>
+      <span class="cl"><span class="cmt"> * @email    Hamid.achahboune@gmail.com</span></span>
+      <span class="cl"><span class="cmt"> * @github   github.com/achahboune</span></span>
+      <span class="cl"><span class="cmt"> */</span></span>
+      <span class="cl ann">@SpringBootApplication</span>
+      <span class="cl ann">@RestController</span>
+      <span class="cl ann">@RequestMapping<span class="op">(</span><span class="str">"/portfolio"</span><span class="op">)</span></span>
+      <span class="cl"><span class="kw">public class</span> <span class="typ">HamidAchahboune</span> <span class="kw">implements</span> <span class="iface">BackendDeveloper</span> <span class="op">{</span></span>
+      <span class="blank"></span>
+
+      <!-- ── PROFIL ── -->
+      <span class="cl indent1"><span class="cmt">// ── PROFIL ────────────────────────────────────────────────</span></span>
+      <span class="cl indent1"><span class="kw">private final</span> <span class="typ">String</span> <span class="var">profil</span> <span class="op">=</span> <span class="str">"Spécialisé Spring Boot &amp; architectures microservices"</span><span class="op">;</span></span>
+      <span class="cl indent1"><span class="kw">private final</span> <span class="typ">String</span> <span class="var">objectif</span> <span class="op">=</span> <span class="str">"CDI dans un environnement technique stimulant à Lyon"</span><span class="op">;</span></span>
+      <span class="cl indent1"><span class="kw">private final</span> <span class="typ">boolean</span> <span class="var">disponible</span> <span class="op">=</span> <span class="num">true</span><span class="op">;</span></span>
+      <span class="blank"></span>
+
+      <!-- ── AVATAR row ── -->
+      <span class="cl indent1"><span class="cmt">// Photo de profil ↓</span></span>
+      <span class="cl indent1" style="white-space:normal; line-height:1;">
+        <div class="avatar-wrap" style="display:inline-flex; margin:6px 0 12px;">
+          <img src="photo.jpg" alt="Hamid Achahboune"
+               onerror="this.style.display='none';document.getElementById('afb').style.display='flex';">
+          <span id="afb" class="avatar-fb" style="display:none;">HA</span>
+        </div>
+      </span>
+      <span class="blank"></span>
+
+      <!-- ── SKILLS ── -->
+      <span class="cl indent1"><span class="cmt">// ── COMPÉTENCES ───────────────────────────────────────────</span></span>
+      <span class="cl indent1"><span class="ann">@Bean</span></span>
+      <span class="cl indent1"><span class="kw">public</span> <span class="typ">List</span><span class="op">&lt;</span><span class="typ">Skill</span><span class="op">&gt;</span> <span class="mtd">getSkills</span><span class="op">() {</span></span>
+      <span class="cl indent2"><span class="kw">return</span> <span class="typ">List</span><span class="op">.of(</span></span>
+
+      <!-- Skill bars embedded -->
+      <span class="cl indent2 reveal" style="white-space:normal;">
+        <div style="padding:8px 0;">
+          <div class="skill-row"><span class="skill-name">Java 17/21</span><div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div><span class="skill-pct">90%</span></div>
+          <div class="skill-row"><span class="skill-name">Spring Boot</span><div class="skill-bar"><div class="skill-fill" style="width:88%"></div></div><span class="skill-pct">88%</span></div>
+          <div class="skill-row"><span class="skill-name">Microservices</span><div class="skill-bar"><div class="skill-fill" style="width:82%"></div></div><span class="skill-pct">82%</span></div>
+          <div class="skill-row"><span class="skill-name">Spring Security</span><div class="skill-bar"><div class="skill-fill" style="width:78%"></div></div><span class="skill-pct">78%</span></div>
+          <div class="skill-row"><span class="skill-name">PostgreSQL</span><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div><span class="skill-pct">80%</span></div>
+          <div class="skill-row"><span class="skill-name">Docker</span><div class="skill-bar"><div class="skill-fill" style="width:75%"></div></div><span class="skill-pct">75%</span></div>
+          <div class="skill-row"><span class="skill-name">JUnit / Mockito</span><div class="skill-bar"><div class="skill-fill" style="width:76%"></div></div><span class="skill-pct">76%</span></div>
+        </div>
+      </span>
+
+      <span class="cl indent2"><span class="op">);</span></span>
+      <span class="cl indent1"><span class="op">}</span></span>
+      <span class="blank"></span>
+
+      <!-- ── EXPÉRIENCES ── -->
+      <span class="cl indent1"><span class="cmt">// ── EXPÉRIENCES ───────────────────────────────────────────</span></span>
+      <span class="cl indent1"><span class="ann">@GetMapping<span class="op">(</span><span class="str">"/experience"</span><span class="op">)</span></span></span>
+      <span class="cl indent1"><span class="kw">public</span> <span class="typ">List</span><span class="op">&lt;</span><span class="typ">Experience</span><span class="op">&gt;</span> <span class="mtd">getExperience</span><span class="op">() {</span></span>
+
+      <span class="cl indent2 reveal" style="white-space:normal;">
+        <div style="padding: 6px 0;">
+          <div class="project-block">
+            <div class="proj-name">Développeur Java Back-End</div>
+            <div class="proj-desc" style="color:var(--java-annotation); margin-bottom:6px; font-size:11px;">Shepe IT (EasiPromo) · Lyon · Avr. 2025 → Août 2025</div>
+            <div class="proj-desc">Développement de microservices Spring Boot, conception d'APIs REST PostgreSQL, tests unitaires JUnit, optimisation des performances.</div>
+            <div class="proj-tags">
+              <span class="ptag">Java 21</span>
+              <span class="ptag">Spring Boot</span>
+              <span class="ptag amber">PostgreSQL</span>
+              <span class="ptag green">Docker</span>
+              <span class="ptag blue">JUnit</span>
+            </div>
+          </div>
+          <div class="project-block" style="margin-top:8px;">
+            <div class="proj-name">Développeur Web</div>
+            <div class="proj-desc" style="color:var(--java-annotation); margin-bottom:6px; font-size:11px;">ID Conseils (Transports Prudent) · Feillens · Nov.→Déc. 2023</div>
+            <div class="proj-desc">Intranet MVC, authentification sécurisée, intégration APIs externes, optimisation MySQL.</div>
+            <div class="proj-tags">
+              <span class="ptag green">PHP 8</span>
+              <span class="ptag amber">MySQL</span>
+              <span class="ptag blue">JavaScript</span>
+            </div>
+          </div>
+        </div>
+      </span>
+
+      <span class="cl indent1"><span class="op">}</span></span>
+      <span class="blank"></span>
+
+      <!-- ── PROJETS ── -->
+      <span class="cl indent1"><span class="cmt">// ── PROJETS TECHNIQUES ────────────────────────────────────</span></span>
+      <span class="cl indent1"><span class="ann">@GetMapping<span class="op">(</span><span class="str">"/projects"</span><span class="op">)</span></span></span>
+      <span class="cl indent1"><span class="kw">public</span>
+       <span class="typ">List</span><span class="op">&lt;</span>
+       <span class="typ">Project</span><span class="op">&gt;</span>
+        <span class="mtd">getProjects</span><span class="op">() </span></span>
+
+      <span class="cl indent2 reveal" style="white-space:normal;">
+        <div style="padding: 6px 0;">
+          <div class="project-block">
+            <a href="https://github.com/achahboune" target="_blank" rel="noopener" class="proj-link">GitHub →</a>
+            <div class="proj-name">Prédiction du risque de diabète</div>
+            <div class="proj-desc">Architecture microservices (patients · notes · diagnostic) avec API gateway. Conteneurisation Docker complète.</div>
+            <div class="proj-tags">
+              <span class="ptag">Java 17</span>
+              <span class="ptag">Spring Boot</span>
+              <span class="ptag amber">MongoDB</span>
+              <span class="ptag green">Docker</span>
+              <span class="ptag blue">Gateway</span>
+            </div>
+          </div>
+          <div class="project-block" style="margin-top:8px;">
+            <a href="https://github.com/achahboune" target="_blank" rel="noopener" class="proj-link">GitHub →</a>
+            <div class="proj-name">Service d'urgence — API REST</div>
+            <div class="proj-desc">API REST complète avec Spring Data JPA. Gestion des entités et persistance relationnelle.</div>
+            <div class="proj-tags">
+              <span class="ptag">Java 17</span>
+              <span class="ptag">Spring Boot</span>
+              <span class="ptag blue">Spring Data JPA</span>
+            </div>
+          </div>
+          <div class="project-block" style="margin-top:8px;">
+            <a href="https://github.com/achahboune" target="_blank" rel="noopener" class="proj-link">GitHub →</a>
+            <div class="proj-name">Application Spring Boot sécurisée</div>
+            <div class="proj-desc">Spring Security + JWT. Pipeline CI/CD GitHub Actions. Déploiement Docker automatisé.</div>
+            <div class="proj-tags">
+              <span class="ptag">Spring Boot</span>
+              <span class="ptag blue">Spring Security</span>
+              <span class="ptag blue">JWT</span>
+              <span class="ptag green">Docker</span>
+              <span class="ptag green">GitHub Actions</span>
+            </div>
+          </div>
+        </div>
+      </span>
+
+      <span class="cl indent1"><span class="op">}</span></span>
+      <span class="blank"></span>
+
+      <!-- ── FORMATION ── -->
+      <span class="cl indent1"><span class="cmt">// ── FORMATION ─────────────────────────────────────────────</span></span>
+      <span class="cl indent1"><span class="kw">private static final</span> <span class="typ">List</span><span class="op">&lt;</span><span class="typ">String</span><span class="op">&gt;</span> <span class="var">FORMATION</span> <span class="op">= </span><span class="typ">List</span><span class="op">.of(</span></span>
+      <span class="cl indent2"><span class="str">"Titre Pro Développeur Concepteur Logiciel — OpenClassrooms (2024–2025)"</span><span class="op">,</span></span>
+      <span class="cl indent2"><span class="str">"Développeur Web et Web Mobile — Online Formapro (2023–2024)"</span></span>
+      <span class="cl indent1"><span class="op">);</span></span>
+      <span class="blank"></span>
+
+      <!-- ── CONTACT ── -->
+      <span class="cl indent1"><span class="cmt">// ── CONTACT ───────────────────────────────────────────────</span></span>
+      <span class="cl indent1"><span class="ann">@GetMapping<span class="op">(</span><span class="str">"/contact"</span><span class="op">)</span></span></span>
+      <span class="cl indent1"><span class="kw">public</span> <span class="typ">ContactInfo</span> <span class="mtd">contact</span><span class="op">() {</span></span>
+      <span class="cl indent2 reveal" style="white-space:normal;">
+        <div class="contact-grid" style="padding: 8px 0;">
+          <a href="mailto:Hamid.achahboune@gmail.com" class="citem">
+            <div class="clabel">// email</div>
+            <div class="cval">Hamid.achahboune@gmail.com</div>
+          </a>
+          <a href="tel:+33651320033" class="citem">
+            <div class="clabel">// téléphone</div>
+            <div class="cval">+33 6 51 32 00 33</div>
+          </a>
+          <a href="https://github.com/achahboune" target="_blank" rel="noopener" class="citem">
+            <div class="clabel">// github</div>
+            <div class="cval" style="color:#4d9cf5;">github.com/achahboune</div>
+          </a>
+          <a href="https://www.linkedin.com/in/hamid-achahboune" target="_blank" rel="noopener" class="citem">
+            <div class="clabel">// linkedin</div>
+            <div class="cval" style="color:#4d9cf5;">Hamid ACHAHBOUNE</div>
+          </a>
+        </div>
+      </span>
+      <span class="cl indent1"><span class="op">}</span></span>
+      <span class="blank"></span>
+
+      <!-- ── MAIN ── -->
+      <span class="cl indent1"><span class="kw">public static void</span> <span class="mtd">main</span><span class="op">(</span><span class="typ">String</span><span class="op">[]</span> <span class="var">args</span><span class="op">) {</span></span>
+      <span class="cl indent2"><span class="typ">SpringApplication</span><span class="op">.</span><span class="mtd">run</span><span class="op">(</span><span class="typ">HamidAchahboune</span><span class="op">.class,</span> <span class="var">args</span><span class="op">);</span></span>
+      <span class="cl indent1"><span class="op">}</span></span>
+      <span class="blank"></span>
+      <span class="cl"><span class="op">}</span> <span class="cmt">// end class HamidAchahboune</span> <span class="cursor"></span></span>
+      <span class="blank"></span>
+
+      <!-- CV button hint -->
+      <span class="cl"><span class="cmt">// 👉 Cliquer sur l'onglet "CV.pdf" ci-dessus pour voir / télécharger le CV</span></span>
+
+    </div><!-- /editor -->
+  </div><!-- /ide-body -->
+
+  <!-- Status Bar -->
+  <div class="statusbar">
+    <div class="sb-item">☕ Java 21</div>
+    <span class="sb-sep">|</span>
+    <div class="sb-item">🟢 Spring Boot 3.x</div>
+    <span class="sb-sep">|</span>
+    <div class="sb-item">🐳 Docker ready</div>
+    <div class="sb-right">
+      <div class="sb-item">📍 Lyon, France</div>
+      <span class="sb-sep">|</span>
+      <div class="sb-item">✅ Disponible · CDI</div>
+    </div>
+  </div>
+
+</div><!-- /ide-window -->
+
+<!-- ════════════════════════════════════════════
+     MODALE CV
+     Placer cv.pdf et photo.jpg dans le même dossier
+════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-cv" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal-box">
+    <div class="modal-titlebar">
+      <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+      <div class="modal-name"><span>CV_Hamid_Achahboune.pdf</span></div>
+      <div class="modal-actions">
+        <a href="cv.pdf" download="CV_Hamid_Achahboune.pdf" class="mdl-btn">⬇ Télécharger</a>
+        <button class="mdl-close" onclick="document.getElementById('modal-cv').classList.remove('open')">✕</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <iframe src="cv.pdf#toolbar=0&navpanes=0&scrollbar=1" title="CV Hamid Achahboune"></iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Line numbers ──
+  const editor = document.getElementById('editor');
+  const gutter = document.getElementById('gutter');
+  const lines = editor.querySelectorAll('.cl, .blank');
+  lines.forEach((_, i) => {
+    const ln = document.createElement('div');
+    ln.className = 'ln';
+    ln.textContent = i + 1;
+    gutter.appendChild(ln);
+  });
+
+  // ── Scroll reveal ──
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.05 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  // ── Tab click — CV modal ──
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  // ── Escape to close modal ──
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') document.getElementById('modal-cv').classList.remove('open');
+  });
+</script>
+
+</body>
+</html>
