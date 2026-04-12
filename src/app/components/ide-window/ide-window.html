@@ -1,0 +1,42 @@
+<div class="ide-window">
+
+  <div class="titlebar">
+    <div class="dots">
+      <span class="dot red"></span>
+      <span class="dot yellow"></span>
+      <span class="dot green"></span>
+    </div>
+
+    <div class="title">
+      <span>HamidAchahboune.java</span> — IntelliJ IDEA
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active">☕ File</div>
+    <div class="tab" (click)="openModal()">📄 CV</div>
+  </div>
+
+  <div class="ide-body">
+
+   <div class="gutter">
+  @for (line of lines; track $index; let i = $index) {
+    <div class="ln">
+      {{ i + 1 }}
+    </div>
+  }
+</div>
+
+    <div class="editor">
+      <ng-content></ng-content>
+    </div>
+
+  </div>
+
+  <div class="statusbar">
+    <span>☕ Java 21</span>
+    <span>🟢 Spring Boot</span>
+    <span class="right">📍 Lyon</span>
+  </div>
+
+</div>

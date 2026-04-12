@@ -1,0 +1,18 @@
+@use '../../styles/mixins' as *;
+.project {
+  @include card;
+  border-left: 3px solid var(--java-keyword);
+  padding: 14px;
+
+  @include hover-bg;
+
+  .title {
+    color: var(--java-type);
+    font-weight: 500;
+  }
+
+  .desc {
+    color: var(--muted);
+    font-size: 12px;
+  }
+}

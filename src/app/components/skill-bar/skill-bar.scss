@@ -1,0 +1,32 @@
+.skill {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .name {
+    min-width: 150px;
+    color: var(--java-type);
+  }
+
+  .bar {
+    flex: 1;
+    height: 4px;
+    background: var(--bg3);
+    border-radius: 2px;
+    overflow: hidden;
+
+    .fill {
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        var(--java-keyword),
+        var(--java-type)
+      );
+    }
+  }
+
+  .pct {
+    font-size: 11px;
+    color: var(--muted);
+  }
+}
