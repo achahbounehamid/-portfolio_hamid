@@ -1,0 +1,45 @@
+
+<div class="project">
+
+  <!-- Link -->
+  @if (link) {
+    <a
+      [href]="link"
+      target="_blank"
+      rel="noopener"
+      class="link"
+    >
+      GitHub →
+    </a>
+  }
+
+  <!-- Title -->
+  <div class="title">
+    {{ title }}
+  </div>
+
+  <!-- Subtitle -->
+  @if (subtitle) {
+    <div class="subtitle">
+      {{ subtitle }}
+    </div>
+  }
+
+  <!-- Description -->
+  <div class="desc">
+    {{ description }}
+  </div>
+
+  <!-- Tags -->
+  <div class="tags">
+    @for (tag of tags; track tag.label) {
+      <span
+        class="tag"
+        [ngClass]="tag.type"
+      >
+        {{ tag.label }}
+      </span>
+    }
+  </div>
+
+</div>
