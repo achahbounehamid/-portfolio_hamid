@@ -1,0 +1,75 @@
+<section class="contact-page">
+  <!-- HEADER -->
+  <div class="contact-header">
+    <p class="path">src/features/contact</p>
+    <h1>ContactController.java</h1>
+    <p class="subtitle">Let’s connect — send me a message or reach me directly.</p>
+  </div>
+
+  <!-- GRID -->
+  <div class="contact-grid">
+    <!-- FORM -->
+    <div class="contact-form">
+      <div class="form-title">
+        <span class="annotation">@PostMapping("/contact")</span>
+        <h2>sendMessage()</h2>
+      </div>
+
+      <form (ngSubmit)="onSubmit()" #contactForm="ngForm">
+        <div class="form-group">
+          <label>String name</label>
+          <input type="text" name="name" [(ngModel)]="form.name" required placeholder="Your name" />
+        </div>
+
+        <div class="form-group">
+          <label>String email</label>
+          <input
+            type="email"
+            name="email"
+            [(ngModel)]="form.email"
+            required
+            placeholder="your@email.com"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>String message</label>
+          <textarea
+            name="message"
+            [(ngModel)]="form.message"
+            rows="5"
+            required
+            placeholder="Write your message..."
+          ></textarea>
+        </div>
+
+        <button type="submit" [disabled]="contactForm.invalid">▶ Execute request</button>
+      </form>
+    </div>
+
+    <!-- CONTACT INFO -->
+    <div class="contact-info">
+      <div class="info-block">
+        <h3>// Direct Contact</h3>
+
+        <div class="info-item">
+          <span class="key">email</span>
+          <a href="mailto:your@email.com">your@email.com</a>
+        </div>
+
+        <div class="info-item">
+          <span class="key">location</span>
+          <span>Lyon, France</span>
+        </div>
+      </div>
+
+      <div class="info-block">
+        <h3>// Social Links</h3>
+
+        <a class="social github" href="https://github.com" target="_blank"> GitHub </a>
+
+        <a class="social linkedin" href="https://linkedin.com" target="_blank"> LinkedIn </a>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,24 +1,19 @@
 import { Routes } from '@angular/router';
-import { Home } from './pages/home/home';
-import { Projects } from './pages/projects/projects';
-import { Contact } from './pages/contact/contact';
+import { Projects } from './feature/projects/projects';
+import { Contact } from './feature/contact/contact';
+import { Layout } from './layout/layout/layout';
+import { HomeComponent } from './feature/home/home';
+import { CvComponent } from './feature/cv/cv.component';
 
-
-export const routes: Routes = [
+export const routes = [
   {
     path: '',
-     component: Home
+    component: Layout,
+    children: [
+      { path: '', component: HomeComponent },
+      { path: 'projects', component: Projects },
+      { path: 'contact', component: Contact },
+      { path: 'cv', component: CvComponent },
+    ],
   },
-  {
-    path: 'projects',
-    component: Projects
-  },
-  {
-    path: 'contact',
-    component: Contact
-  },
-  {
-    path: '**',
-    redirectTo: ''
-  }
 ];

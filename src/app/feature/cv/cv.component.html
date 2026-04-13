@@ -1,0 +1,19 @@
+<section class="cv-page">
+  <div class="cv-header">
+    <div class="cv-title-block">
+      <p class="cv-path">src/assets/cv</p>
+      <h1>CV_Hamid_Achahboune.pdf</h1>
+      <p class="cv-subtitle">Prévisualisation du CV avec possibilité de téléchargement.</p>
+    </div>
+
+    <div class="cv-actions">
+      <a class="download-btn" [href]="cvUrl" download="CV_Hamid_Achahboune.pdf">
+        ⬇ Télécharger le CV
+      </a>
+    </div>
+  </div>
+
+  <div class="cv-viewer">
+    <iframe [src]="safeCvUrl" title="CV Hamid Achahboune" loading="lazy"> </iframe>
+  </div>
+</section>

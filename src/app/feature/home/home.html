@@ -1,0 +1,191 @@
+<div class="home-ide">
+  <aside class="gutter">
+    <div class="ln" *ngFor="let line of lineNumbers">
+      {{ line }}
+    </div>
+  </aside>
+
+  <section class="editor">
+    <div class="code-line">
+      <span class="kw">package</span>
+      <span class="pkg">fr.lyon.backend.developer</span><span class="op">;</span>
+    </div>
+
+    <div class="blank"></div>
+
+    <div class="code-line">
+      <span class="kw">import</span>
+      <span class="pkg">org.springframework.boot.autoconfigure.SpringBootApplication</span
+      ><span class="op">;</span>
+    </div>
+    <div class="code-line">
+      <span class="kw">import</span>
+      <span class="pkg">org.springframework.web.bind.annotation.*</span><span class="op">;</span>
+    </div>
+
+    <div class="blank"></div>
+
+    <div class="code-line"><span class="cmt">/**</span></div>
+    <div class="code-line">
+      <span class="cmt"> * @author {{ data.profile.fullName }}</span>
+    </div>
+    <div class="code-line">
+      <span class="cmt"> * @title {{ data.profile.role }}</span>
+    </div>
+    <div class="code-line">
+      <span class="cmt"> * @location {{ data.profile.location }}</span>
+    </div>
+    <div class="code-line">
+      <span class="cmt"> * @email {{ data.profile.email }}</span>
+    </div>
+    <div class="code-line"><span class="cmt"> */</span></div>
+
+    <div class="code-line"><span class="ann">@SpringBootApplication</span></div>
+    <div class="code-line"><span class="ann">@RestController</span></div>
+    <div class="code-line">
+      <span class="kw">public class</span>
+      <span class="typ">HamidAchahboune</span>
+      <span class="kw">implements</span>
+      <span class="iface">BackendDeveloper</span>
+      <span class="op">{{ '{' }}</span>
+    </div>
+
+    <div class="blank"></div>
+
+    <div class="code-line indent1">
+      <span class="cmt">// ── PROFIL ─────────────────────────────</span>
+    </div>
+    <div class="code-line indent1">
+      <span class="kw">private final</span>
+      <span class="typ">String</span>
+      <span class="var">profil</span>
+      <span class="op">=</span>
+      <span class="str">"{{ data.profile.profile }}"</span><span class="op">;</span>
+    </div>
+    <div class="code-line indent1">
+      <span class="kw">private final</span>
+      <span class="typ">String</span>
+      <span class="var">objectif</span>
+      <span class="op">=</span>
+      <span class="str">"{{ data.profile.objective }}"</span><span class="op">;</span>
+    </div>
+    <div class="code-line indent1">
+      <span class="kw">private final</span>
+      <span class="typ">boolean</span>
+      <span class="var">disponible</span>
+      <span class="op">=</span>
+      <span class="num">{{ data.profile.available ? 'true' : 'false' }}</span
+      ><span class="op">;</span>
+    </div>
+
+    <div class="blank"></div>
+
+    <div class="code-line indent1">
+      <span class="cmt">// ── COMPÉTENCES ────────────────────────</span>
+    </div>
+    <div class="code-line indent1"><span class="ann">@Bean</span></div>
+    <div class="code-line indent1">
+      <span class="kw">public</span>
+      <span class="typ">List</span><span class="op">&lt;</span><span class="typ">Skill</span
+      ><span class="op">&gt;</span> <span class="mtd">getSkills</span
+      ><span class="op">() {{ '{' }}</span>
+    </div>
+
+    <div class="skills-box indent2">
+      <div class="skill-row" *ngFor="let skill of data.skills">
+        <span class="skill-name">{{ skill.name }}</span>
+        <div class="skill-bar">
+          <div class="skill-fill" [style.width.%]="skill.level"></div>
+        </div>
+        <span class="skill-pct">{{ skill.level }}%</span>
+      </div>
+    </div>
+
+    <div class="code-line indent1">
+      <span class="op">{{ '}' }}</span>
+    </div>
+
+    <div class="blank"></div>
+
+    <div class="code-line indent1">
+      <span class="cmt">// ── EXPÉRIENCES ────────────────────────</span>
+    </div>
+    <div class="experience-list indent2">
+      <div class="project-block" *ngFor="let exp of data.experiences">
+        <div class="proj-name">{{ exp.title }}</div>
+        <div class="proj-meta">{{ exp.company }} · {{ exp.location }} · {{ exp.period }}</div>
+        <div class="proj-desc">{{ exp.description }}</div>
+        <div class="proj-tags">
+          <span class="ptag" *ngFor="let tag of exp.tags">
+            {{ tag }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="blank"></div>
+
+    <div class="code-line indent1">
+      <span class="cmt">// ── PROJETS ────────────────────────────</span>
+    </div>
+    <div class="projects-list indent2">
+      <div class="project-block" *ngFor="let project of data.projects">
+        <a
+          *ngIf="project.githubUrl"
+          [href]="project.githubUrl"
+          target="_blank"
+          rel="noopener"
+          class="proj-link"
+        >
+          GitHub →
+        </a>
+
+        <div class="proj-name">{{ project.name }}</div>
+        <div class="proj-desc">{{ project.description }}</div>
+
+        <div class="proj-tags">
+          <span *ngFor="let tag of project.tags" [class]="getTagClass(tag.type)">
+            {{ tag.label }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="blank"></div>
+
+    <div class="code-line indent1">
+      <span class="cmt">// ── FORMATION ──────────────────────────</span>
+    </div>
+    <div class="formation-list indent2">
+      <div class="code-line" *ngFor="let item of data.formation">
+        <span class="str">"{{ item }}"</span>
+      </div>
+    </div>
+
+    <div class="blank"></div>
+
+    <div class="code-line indent1">
+      <span class="cmt">// ── CONTACT ────────────────────────────</span>
+    </div>
+    <div class="contact-grid indent2">
+      <a
+        class="citem"
+        *ngFor="let contact of data.contacts"
+        [href]="contact.href"
+        target="_blank"
+        rel="noopener"
+      >
+        <div class="clabel">// {{ contact.label }}</div>
+        <div class="cval">{{ contact.value }}</div>
+      </a>
+    </div>
+
+    <div class="blank"></div>
+
+    <div class="code-line">
+      <span class="op">{{ '}' }}</span>
+      <span class="cmt">// end class HamidAchahboune</span>
+      <span class="cursor"></span>
+    </div>
+  </section>
+</div>

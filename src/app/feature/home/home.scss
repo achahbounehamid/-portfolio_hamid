@@ -1,0 +1,280 @@
+:host {
+  display: block;
+}
+
+.home-ide {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  min-height: calc(100vh - 120px);
+  background: var(--bg, #0d1117);
+  color: var(--text, #e6edf3);
+}
+
+.gutter {
+  border-right: 1px solid var(--border, #30363d);
+  padding: 1.5rem 0;
+  background: #0d1117;
+}
+
+.ln {
+  min-width: 48px;
+  padding: 0 10px;
+  text-align: right;
+  color: #3d444d;
+  font-size: 12px;
+  line-height: 1.75;
+}
+
+.editor {
+  padding: 1.5rem 2rem 3rem;
+  overflow-x: auto;
+}
+
+.code-line {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.75;
+  white-space: pre-wrap;
+}
+
+.blank {
+  height: 1rem;
+}
+
+.indent1 {
+  padding-left: 1.5rem;
+}
+
+.indent2 {
+  padding-left: 3rem;
+}
+
+.kw {
+  color: #cc7832;
+  font-weight: 500;
+}
+.ann {
+  color: #bbb529;
+}
+.str {
+  color: #6a8759;
+}
+.typ {
+  color: #ffc66d;
+}
+.cmt {
+  color: #629755;
+  font-style: italic;
+}
+.num {
+  color: #6897bb;
+}
+.mtd {
+  color: #ffc66d;
+}
+.pkg {
+  color: #7d8590;
+}
+.op {
+  color: #7d8590;
+}
+.var {
+  color: #e6edf3;
+}
+.iface {
+  color: #e8bf6a;
+}
+
+.skills-box,
+.experience-list,
+.projects-list,
+.formation-list,
+.contact-grid {
+  margin-top: 0.5rem;
+}
+
+.skill-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+  max-width: 520px;
+}
+
+.skill-name {
+  min-width: 150px;
+  font-size: 12px;
+  color: #ffc66d;
+}
+
+.skill-bar {
+  flex: 1;
+  height: 6px;
+  background: #1c2128;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.skill-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #cc7832, #ffc66d);
+  border-radius: 999px;
+}
+
+.skill-pct {
+  min-width: 40px;
+  font-size: 11px;
+  color: #7d8590;
+}
+
+.project-block {
+  position: relative;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-left: 3px solid #cc7832;
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin: 10px 0;
+}
+
+.project-block:hover {
+  background: #1c2128;
+}
+
+.proj-name {
+  color: #ffc66d;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.proj-meta {
+  color: #bbb529;
+  font-size: 11px;
+  margin-bottom: 8px;
+}
+
+.proj-desc {
+  color: #c9d1d9;
+  font-size: 12px;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.proj-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ptag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(204, 120, 50, 0.12);
+  border: 1px solid rgba(204, 120, 50, 0.22);
+  color: #cc7832;
+
+  &.blue {
+    background: rgba(77, 156, 245, 0.1);
+    border-color: rgba(77, 156, 245, 0.2);
+    color: #4d9cf5;
+  }
+
+  &.green {
+    background: rgba(106, 135, 89, 0.12);
+    border-color: rgba(106, 135, 89, 0.24);
+    color: #6a8759;
+  }
+
+  &.amber {
+    background: rgba(255, 198, 109, 0.1);
+    border-color: rgba(255, 198, 109, 0.22);
+    color: #ffc66d;
+  }
+}
+
+.proj-link {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  color: #4d9cf5;
+  font-size: 11px;
+  text-decoration: none;
+}
+
+.proj-link:hover {
+  color: #ffc66d;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(200px, 1fr));
+  gap: 10px;
+  max-width: 650px;
+}
+
+.citem {
+  display: block;
+  text-decoration: none;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.citem:hover {
+  border-color: #cc7832;
+}
+
+.clabel {
+  font-size: 10px;
+  color: #7d8590;
+  margin-bottom: 4px;
+}
+
+.cval {
+  font-size: 12px;
+  color: #e6edf3;
+}
+
+.cursor::after {
+  content: '|';
+  color: #4d9cf5;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .home-ide {
+    grid-template-columns: 36px 1fr;
+  }
+
+  .editor {
+    padding: 1rem;
+  }
+
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .skill-row {
+    flex-wrap: wrap;
+  }
+
+  .skill-name {
+    min-width: 100%;
+  }
+}
