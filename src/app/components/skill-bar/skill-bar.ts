@@ -1,14 +1,12 @@
 import { Component, Input } from '@angular/core';
+import { Skill } from '../../core/models/skill.model';
 
 @Component({
   selector: 'app-skill-bar',
   standalone: true,
-  imports: [],
   templateUrl: './skill-bar.html',
-  styleUrl: './skill-bar.scss',
+  styleUrls: ['./skill-bar.scss']
 })
-export class SkillBar {
-   @Input() name!: string;
-  @Input() value!: number;
-
+export class SkillBarComponent {
+  @Input() skill!: Skill;
 }

@@ -1,9 +1,12 @@
-<div class="skill">
-  <span class="name">{{ name }}</span>
+<div class="skill-row">
+  <span class="skill-name">{{ skill.name }}</span>
 
-  <div class="bar">
-    <div class="fill" [style.width.%]="value"></div>
+  <div class="skill-bar">
+    <div
+      class="skill-fill"
+      [style.width.%]="skill.level">
+    </div>
   </div>
 
-  <span class="pct">{{ value }}%</span>
+  <span class="skill-pct">{{ skill.level }}%</span>
 </div>

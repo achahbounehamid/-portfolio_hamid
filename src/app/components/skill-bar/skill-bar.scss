@@ -1,32 +1,27 @@
-.skill {
+.skill-row {
   display: flex;
   align-items: center;
   gap: 12px;
+}
 
-  .name {
-    min-width: 150px;
-    color: var(--java-type);
-  }
+.skill-name {
+  min-width: 150px;
+  color: var(--java-type);
+}
 
-  .bar {
-    flex: 1;
-    height: 4px;
-    background: var(--bg3);
-    border-radius: 2px;
-    overflow: hidden;
+.skill-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--bg3);
+}
 
-    .fill {
-      height: 100%;
-      background: linear-gradient(
-        90deg,
-        var(--java-keyword),
-        var(--java-type)
-      );
-    }
-  }
+.skill-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--java-keyword), var(--java-type));
+  transition: width 0.8s ease;
+}
 
-  .pct {
-    font-size: 11px;
-    color: var(--muted);
-  }
+.skill-pct {
+  font-size: 11px;
+  color: var(--muted);
 }

@@ -1,17 +1,21 @@
 @if (projects$ | async; as projects) {
   <div class="grid">
-    @for (project of projects; track project.title) {
+    @for (project of projects; track project.name) {
+
       <div class="card">
-        <h3>{{ project.title }}</h3>
+        <h3>{{ project.name }}</h3>
 
         <p>{{ project.description }}</p>
 
         <div class="tags">
           @for (tag of project.tags; track $index) {
-            <span class="tag">{{ tag }}</span>
+            <span class="tag" [ngClass]="tag.type">
+              {{ tag.label }}
+            </span>
           }
         </div>
       </div>
+
     }
   </div>
 }

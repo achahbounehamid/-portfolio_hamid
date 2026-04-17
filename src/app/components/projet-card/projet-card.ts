@@ -1,19 +1,17 @@
-import { CommonModule, NgClass } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Project } from '../../core/models/project.model';
+
 
 @Component({
   selector: 'app-projet-card',
-   standalone: true,
-  imports: [NgClass],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './projet-card.html',
-  styleUrl: './projet-card.scss',
+  styleUrls: ['./projet-card.scss']
 })
-export class ProjetCard {
-  @Input() title!: string;
-  @Input() subtitle?: string;
-  @Input() description!: string;
-  @Input() link?: string;
+export class ProjetCardComponent {
 
-  @Input() tags: { label: string; type?: string }[] = [];
+  @Input() project!: Project; 
 
 }

@@ -1,45 +1,34 @@
-
 <div class="project">
 
-  <!-- Link -->
-  @if (link) {
-    <a
-      [href]="link"
-      target="_blank"
-      rel="noopener"
-      class="link"
-    >
-      GitHub →
-    </a>
-  }
+  <!-- 🔗 Lien GitHub -->
+  <!-- <a
+    *ngIf="project.github"
+    [href]="project.github"
+    target="_blank"
+    class="proj-link">
+    GitHub →
+  </a> -->
 
-  <!-- Title -->
-  <div class="title">
-    {{ title }}
+  <!-- 🏷️ Nom du projet -->
+  <div class="proj-name">
+    {{ project.name }}
   </div>
 
-  <!-- Subtitle -->
-  @if (subtitle) {
-    <div class="subtitle">
-      {{ subtitle }}
-    </div>
-  }
-
-  <!-- Description -->
-  <div class="desc">
-    {{ description }}
+  <!-- 📄 Description -->
+  <div class="proj-desc">
+    {{ project.description }}
   </div>
 
-  <!-- Tags -->
-  <div class="tags">
-    @for (tag of tags; track tag.label) {
-      <span
-        class="tag"
-        [ngClass]="tag.type"
-      >
-        {{ tag.label }}
-      </span>
-    }
+  <!-- 🏷️ Tags -->
+  <div class="proj-tags">
+    <span
+      *ngFor="let tag of project.tags"
+      class="ptag"
+      [ngClass]="tag.type">
+
+      {{ tag.label }}
+
+    </span>
   </div>
 
 </div>

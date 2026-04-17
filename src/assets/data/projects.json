@@ -1,12 +1,33 @@
 [
   {
-    "title": "Diabetes Prediction System",
-    "description": "Microservices Spring Boot + Docker + Gateway",
-    "tags": ["Java 17", "Spring Boot", "MongoDB", "Docker"]
+    "name": "Architecture Microservices – Prédiction du risque de diabète",
+    "description": "Conception d’une architecture microservices (patients, notes, diagnostic), implémentation d’API REST avec gateway et conteneurisation Docker.",
+    "tags": [
+      { "label": "Java 17", "type": "green" },
+      { "label": "Spring Boot", "type": "blue" },
+      { "label": "MongoDB", "type": "amber" },
+      { "label": "Docker", "type": "green" },
+      { "label": "Gateway", "type": "blue" }
+    ]
   },
   {
-    "title": "Emergency REST API",
-    "description": "REST API with Spring Data JPA",
-    "tags": ["Spring Boot", "JPA", "MySQL"]
+    "name": "API REST – Service d’urgence",
+    "description": "Développement d’une API REST complète avec gestion des entités et persistance via Spring Data JPA.",
+    "tags": [
+      { "label": "Java 17", "type": "green" },
+      { "label": "Spring Boot", "type": "blue" },
+      { "label": "JPA", "type": "blue" },
+      { "label": "MySQL", "type": "amber" }
+    ]
+  },
+  {
+    "name": "Sécurisation & CI/CD – Application Spring Boot",
+    "description": "Implémentation de l’authentification avec Spring Security et automatisation du déploiement avec GitHub Actions.",
+    "tags": [
+      { "label": "Spring Boot", "type": "blue" },
+      { "label": "Spring Security", "type": "blue" },
+      { "label": "Docker", "type": "green" },
+      { "label": "CI/CD", "type": "amber" }
+    ]
   }
 ]

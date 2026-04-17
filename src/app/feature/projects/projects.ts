@@ -1,15 +1,28 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { ProjectService } from '@app/services/project.service';
+import { Component } from '@angular/core';
+import { Project } from '../../core/models/project.model';
+import { ProjectService } from '../../services/project.service';
+import { Observable } from 'rxjs';
+import { AsyncPipe, CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-projects',
-  imports: [CommonModule],
+   standalone: true,
+  imports: [
+    CommonModule,
+    AsyncPipe
+  ],
   templateUrl: './projects.html',
-  styleUrl: './projects.scss',
+  styleUrls: ['./projects.scss']
 })
-export class Projects {
-  private projectService = inject(ProjectService);
+export class ProjectsComponent {
 
-  projects$ = this.projectService.getProjects();
+  projects$!: Observable<Project[]>; 
+
+  constructor(private projectService: ProjectService) {}
+
+  ngOnInit() {
+    this.projects$ = this.projectService.getProjects(); 
+  }
+
 }
